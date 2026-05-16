@@ -24,6 +24,7 @@ import ChatPage from "@/pages/chat";
 import AboutPage from "@/pages/about";
 import ContactPage from "@/pages/contact";
 import EmergencyPage from "@/pages/emergency";
+import FeaturesPage from "@/pages/features";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/about" component={AboutPage} />
       <Route path="/contact" component={ContactPage} />
       <Route path="/emergency" component={EmergencyPage} />
+      <Route path="/features" component={FeaturesPage} />
       <Route component={NotFound} />
     </Switch>
   );

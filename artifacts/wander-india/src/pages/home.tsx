@@ -347,6 +347,7 @@ export default function HomePage() {
             </div>
             <div className="flex gap-6">
               {[
+                { href: "/features", label: "Features" },
                 { href: "/about", label: "About" },
                 { href: "/contact", label: "Contact" },
                 { href: "/emergency", label: "Emergency" },

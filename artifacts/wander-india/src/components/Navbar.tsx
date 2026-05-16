@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   MapPin, Menu, X, Compass, Brain, Sun, Plane, DollarSign,
   User, MessageSquare, Package, Gem, LogOut, LayoutDashboard,
-  Zap, Phone
+  Zap, Phone, Sparkles
 } from "lucide-react";
 
 const NAV_LINKS = [
@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: "/ai-planner", label: "AI Planner", icon: Brain },
   { href: "/mood-planner", label: "Mood Travel", icon: Sun },
   { href: "/hidden-gems", label: "Hidden Gems", icon: Gem },
+  { href: "/features", label: "Features", icon: Sparkles },
 ];
 
 const AUTH_NAV = [
