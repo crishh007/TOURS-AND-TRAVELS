@@ -1,22 +1,35 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: WanderIndia AI Travel Planner API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: destinations
+    description: Destination management
+  - name: trips
+    description: Trip management
+  - name: ai
+    description: AI-powered features
+  - name: budget
+    description: Budget tracking
+  - name: dashboard
+    description: Dashboard summaries
+  - name: chat
+    description: AI Chat
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +37,454 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Auth
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: User registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/profile:
+    patch:
+      operationId: updateProfile
+      tags: [auth]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # Destinations
+  /destinations:
+    get:
+      operationId: listDestinations
+      tags: [destinations]
+      summary: List destinations
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: mood
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+
+  /destinations/trending:
+    get:
+      operationId: getTrendingDestinations
+      tags: [destinations]
+      summary: Get trending destinations
+      responses:
+        "200":
+          description: Trending destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+
+  /destinations/hidden-gems:
+    get:
+      operationId: getHiddenGems
+      tags: [destinations]
+      summary: Get hidden gem destinations
+      responses:
+        "200":
+          description: Hidden gems
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+
+  /destinations/{id}:
+    get:
+      operationId: getDestination
+      tags: [destinations]
+      summary: Get a destination by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Destination
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Destination"
+
+  # Trips / Saved Trips
+  /trips:
+    get:
+      operationId: listTrips
+      tags: [trips]
+      summary: List user's saved trips
+      responses:
+        "200":
+          description: List of trips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trip"
+    post:
+      operationId: createTrip
+      tags: [trips]
+      summary: Save a new trip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TripInput"
+      responses:
+        "201":
+          description: Created trip
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trip"
+
+  /trips/{id}:
+    get:
+      operationId: getTrip
+      tags: [trips]
+      summary: Get trip by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Trip
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trip"
+    delete:
+      operationId: deleteTrip
+      tags: [trips]
+      summary: Delete a trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # Expenses / Budget
+  /trips/{tripId}/expenses:
+    get:
+      operationId: listExpenses
+      tags: [budget]
+      summary: List expenses for a trip
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of expenses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expense"
+    post:
+      operationId: createExpense
+      tags: [budget]
+      summary: Add expense to a trip
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseInput"
+      responses:
+        "201":
+          description: Created expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+
+  /trips/{tripId}/expenses/{expenseId}:
+    delete:
+      operationId: deleteExpense
+      tags: [budget]
+      summary: Delete an expense
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: expenseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # AI Itinerary
+  /ai/itinerary:
+    post:
+      operationId: generateItinerary
+      tags: [ai]
+      summary: Generate AI itinerary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItineraryRequest"
+      responses:
+        "200":
+          description: Generated itinerary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItineraryResponse"
+
+  # Mood Recommendations
+  /ai/mood-recommendations:
+    post:
+      operationId: getMoodRecommendations
+      tags: [ai]
+      summary: Get AI travel recommendations based on mood
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MoodInput"
+      responses:
+        "200":
+          description: Mood-based recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MoodRecommendations"
+
+  # AI Chat
+  /ai/chat:
+    post:
+      operationId: sendChatMessage
+      tags: [chat]
+      summary: Send message to AI travel assistant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatInput"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+
+  # Packing
+  /ai/packing-list:
+    post:
+      operationId: generatePackingList
+      tags: [ai]
+      summary: Generate AI packing checklist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PackingRequest"
+      responses:
+        "200":
+          description: Packing list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PackingResponse"
+
+  # Weather
+  /weather/{destination}:
+    get:
+      operationId: getWeather
+      tags: [destinations]
+      summary: Get weather for a destination
+      parameters:
+        - name: destination
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Weather info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WeatherInfo"
+
+  # Dashboard
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary for current user
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent activity feed
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +492,429 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    RegisterInput:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          minLength: 2
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+
+    User:
+      type: object
+      required: [id, name, email, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        tripsCount:
+          type: integer
+        createdAt:
+          type: string
+
+    ProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        bio:
+          type: string
+        location:
+          type: string
+        avatar:
+          type: string
+
+    Destination:
+      type: object
+      required: [id, name, state, description, imageUrl, category, rating, bestTime]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        state:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        category:
+          type: string
+        rating:
+          type: number
+        bestTime:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        isTrending:
+          type: boolean
+        isHiddenGem:
+          type: boolean
+        avgBudgetPerDay:
+          type: integer
+        mood:
+          type: ["string", "null"]
+
+    Trip:
+      type: object
+      required: [id, userId, destinationId, destinationName, startDate, endDate, totalBudget, status, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        destinationId:
+          type: integer
+        destinationName:
+          type: string
+        destinationImage:
+          type: ["string", "null"]
+        startDate:
+          type: string
+        endDate:
+          type: string
+        totalBudget:
+          type: number
+        spentAmount:
+          type: number
+        status:
+          type: string
+        itinerary:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    TripInput:
+      type: object
+      required: [destinationId, destinationName, startDate, endDate, totalBudget]
+      properties:
+        destinationId:
+          type: integer
+        destinationName:
+          type: string
+        destinationImage:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        totalBudget:
+          type: number
+        itinerary:
+          type: string
+        notes:
+          type: string
+
+    Expense:
+      type: object
+      required: [id, tripId, category, amount, description, date]
+      properties:
+        id:
+          type: integer
+        tripId:
+          type: integer
+        category:
+          type: string
+        amount:
+          type: number
+        description:
+          type: string
+        date:
+          type: string
+
+    ExpenseInput:
+      type: object
+      required: [category, amount, description, date]
+      properties:
+        category:
+          type: string
+        amount:
+          type: number
+        description:
+          type: string
+        date:
+          type: string
+
+    ItineraryRequest:
+      type: object
+      required: [destination, days, mood, budget]
+      properties:
+        destination:
+          type: string
+        days:
+          type: integer
+        mood:
+          type: string
+        budget:
+          type: integer
+        interests:
+          type: array
+          items:
+            type: string
+
+    ItineraryResponse:
+      type: object
+      required: [destination, days, itinerary, tips]
+      properties:
+        destination:
+          type: string
+        days:
+          type: integer
+        itinerary:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItineraryDay"
+        tips:
+          type: array
+          items:
+            type: string
+        estimatedCost:
+          type: integer
+
+    ItineraryDay:
+      type: object
+      required: [day, title, activities, meals, accommodation]
+      properties:
+        day:
+          type: integer
+        title:
+          type: string
+        activities:
+          type: array
+          items:
+            type: string
+        meals:
+          type: array
+          items:
+            type: string
+        accommodation:
+          type: string
+        tips:
+          type: string
+
+    MoodInput:
+      type: object
+      required: [mood]
+      properties:
+        mood:
+          type: string
+        energyLevel:
+          type: integer
+        travelStyle:
+          type: string
+        groupType:
+          type: string
+
+    MoodRecommendations:
+      type: object
+      required: [mood, destinations, activities, travelStyle, packingTips]
+      properties:
+        mood:
+          type: string
+        destinations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Destination"
+        activities:
+          type: array
+          items:
+            type: string
+        travelStyle:
+          type: string
+        packingTips:
+          type: array
+          items:
+            type: string
+        bestSeason:
+          type: string
+
+    ChatInput:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+        conversationHistory:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+
+    ChatMessage:
+      type: object
+      required: [role, content]
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+
+    ChatResponse:
+      type: object
+      required: [message, suggestions]
+      properties:
+        message:
+          type: string
+        suggestions:
+          type: array
+          items:
+            type: string
+
+    PackingRequest:
+      type: object
+      required: [destination, days, season, activities]
+      properties:
+        destination:
+          type: string
+        days:
+          type: integer
+        season:
+          type: string
+        activities:
+          type: array
+          items:
+            type: string
+
+    PackingResponse:
+      type: object
+      required: [categories]
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/PackingCategory"
+
+    PackingCategory:
+      type: object
+      required: [name, items]
+      properties:
+        name:
+          type: string
+        items:
+          type: array
+          items:
+            type: string
+
+    WeatherInfo:
+      type: object
+      required: [destination, temperature, condition, humidity, windSpeed, forecast]
+      properties:
+        destination:
+          type: string
+        temperature:
+          type: number
+        condition:
+          type: string
+        humidity:
+          type: integer
+        windSpeed:
+          type: number
+        feelsLike:
+          type: number
+        forecast:
+          type: array
+          items:
+            $ref: "#/components/schemas/WeatherDay"
+
+    WeatherDay:
+      type: object
+      required: [date, high, low, condition]
+      properties:
+        date:
+          type: string
+        high:
+          type: number
+        low:
+          type: number
+        condition:
+          type: string
+
+    DashboardSummary:
+      type: object
+      required: [totalTrips, upcomingTrips, totalSpent, savedDestinations, recentTrips]
+      properties:
+        totalTrips:
+          type: integer
+        upcomingTrips:
+          type: integer
+        totalSpent:
+          type: number
+        savedDestinations:
+          type: integer
+        recentTrips:
+          type: array
+          items:
+            $ref: "#/components/schemas/Trip"
+        favoriteDestination:
+          type: ["string", "null"]
+        totalDaysTraveled:
+          type: integer
+
+    ActivityItem:
+      type: object
+      required: [id, type, title, description, timestamp]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+        imageUrl:
+          type: ["string", "null"]

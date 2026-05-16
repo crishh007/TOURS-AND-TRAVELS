@@ -1,0 +1,342 @@
+Build a fully dynamic, production-level AI-powered Smart Travel Planner web application with futuristic premium UI/UX, real backend functionality, fully working features, page-based navigation, immersive visuals, dynamic APIs, and advanced AI integrations.
+
+The website must NOT be static or demo-based. Every feature, button, page, form, API, dashboard, and AI system should work dynamically like a real SaaS product.
+
+==================================================
+MAIN OBJECTIVE
+
+Create a next-generation AI travel platform that behaves like a real-world commercial product with:
+
+- secure authentication
+- fully working backend
+- real database integration
+- AI-powered personalization
+- premium animations
+- immersive navigation
+- responsive design
+- dynamic content
+- page-to-page routing
+- interactive travel experiences
+
+The website should feel like:
+Tesla + Netflix + Airbnb + Spotify + Google Travel combined into one futuristic AI platform.
+
+==================================================
+TECH STACK
+
+Frontend:
+
+- React + Vite
+- Tailwind CSS
+- Framer Motion
+- GSAP animations
+- Three.js
+- React Router DOM
+- Axios
+
+Backend:
+
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+
+Authentication:
+
+- JWT Authentication
+- Firebase Authentication
+- Google Login
+- bcrypt password hashing
+
+APIs:
+
+- Gemini API / OpenAI API
+- Google Maps API
+- Weather API
+- Currency Exchange API
+- Cloudinary API
+
+==================================================
+FULLY WORKING AUTHENTICATION
+
+Implement complete real authentication.
+
+SIGNUP:
+
+- create new user account
+- validate fields
+- hash passwords securely
+- store user in MongoDB
+- email verification
+- OTP verification
+- prevent duplicate accounts
+
+LOGIN:
+
+- validate credentials dynamically
+- compare encrypted passwords
+- generate JWT token
+- create secure session
+- redirect to dashboard only if credentials match
+
+IMPORTANT:
+If login credentials are incorrect:
+
+- DO NOT allow entry into dashboard
+- show animated error popup:
+  “Invalid email or password”
+- keep user on login page
+
+PROTECTED ROUTES:
+
+- Dashboard
+- AI Planner
+- Saved Trips
+- Budget Tracker
+- Mood Planner
+- Profile
+- Group Trips
+
+Only authenticated users can access these pages.
+
+==================================================
+REAL PAGE NAVIGATION (IMPORTANT)
+
+DO NOT create one-page scrolling sections.
+
+The website must use REAL MULTI-PAGE NAVIGATION using React Router.
+
+When user clicks buttons:
+
+- redirect to separate pages
+- load full page transitions
+- use animated route transitions
+
+Examples:
+
+- Login button → opens Login page
+- Signup button → opens Signup page
+- Explore button → opens Explore Destinations page
+- AI Planner button → opens Planner Dashboard
+- Mood Planner button → opens Mood Travel page
+
+DO NOT use scroll-down navigation.
+Every major feature must open on a dedicated page.
+
+==================================================
+FULLY WORKING FEATURES
+
+All features must function dynamically.
+
+NOT static placeholders.
+
+Working Features:
+
+- AI itinerary generation
+- weather integration
+- destination search
+- maps navigation
+- budget calculations
+- saved trips
+- user dashboard
+- profile editing
+- AI recommendations
+- mood analysis
+- packing assistant
+- expense tracker
+- AI chatbot
+- notifications
+- trip history
+- wishlist saving
+
+==================================================
+MOOD-BASED AI TRAVEL ENGINE
+
+Build an emotionally intelligent travel recommendation engine.
+
+The AI dynamically analyzes:
+
+- mood
+- personality
+- energy level
+- stress level
+- interests
+
+Mood Categories:
+
+- stressed
+- relaxed
+- romantic
+- energetic
+- adventurous
+- lonely
+- party mood
+- family mood
+
+Generate:
+
+- destinations
+- hotels
+- restaurants
+- activities
+- weather suggestions
+- travel styles
+- playlists
+
+Examples:
+
+- stressed → peaceful beaches & mountains
+- romantic → luxury couple resorts
+- energetic → nightlife & adventure sports
+
+==================================================
+IMMERSIVE BACKGROUND & VISUALS
+
+Add stunning dynamic backgrounds and travel visuals across the website.
+
+Use:
+
+- animated world maps
+- moving airplane paths
+- cinematic travel videos
+- interactive destination images
+- dynamic image sliders
+- travel background transitions
+- floating glowing particles
+- animated clouds/stars
+- AI holographic effects
+
+Background images should change dynamically based on:
+
+- selected destination
+- user mood
+- weather
+- travel category
+
+==================================================
+PREMIUM COLOR SYSTEM
+
+Apply modern futuristic premium colors effectively.
+
+Primary Colors:
+
+- deep black
+- midnight blue
+- neon purple
+- cyan glow
+- gradient pink
+- electric blue
+
+UI Style:
+
+- glassmorphism
+- glowing borders
+- soft shadows
+- neon highlights
+- blur effects
+- smooth hover animations
+
+Dark Mode:
+
+- premium cinematic black theme
+
+Light Mode:
+
+- elegant white + cyan gradients
+
+==================================================
+BUILT-IN WORKING FEATURES
+
+Include fully integrated built-in systems:
+
+- AI chatbot assistant
+- smart notifications
+- currency converter
+- travel reminders
+- weather forecast
+- map integration
+- expense tracking
+- AI packing checklist
+- hidden gems explorer
+- AI travel twin
+- emergency assistance
+- travel memory gallery
+
+==================================================
+LANDING PAGE
+
+Create a cinematic homepage with:
+
+Hero Section:
+
+- animated globe
+- AI orb assistant
+- mood selector
+- search destination input
+- “Plan My AI Journey” button
+- animated airplane routes
+
+Homepage Sections:
+
+- trending destinations
+- AI recommendations
+- hidden gems
+- testimonials
+- mood-based travel suggestions
+- smart planner showcase
+- premium CTA banners
+
+==================================================
+REQUIRED PAGES
+
+Create separate fully functional pages:
+
+- Home Page
+- Login Page
+- Signup Page
+- Dashboard
+- AI Planner
+- Mood Travel Planner
+- Explore Destinations
+- Hidden Gems
+- Saved Trips
+- Group Planner
+- Budget Tracker
+- Profile Page
+- Travel History
+- Contact Us
+- About Us
+- FAQ
+- Emergency Assistance
+
+==================================================
+ANIMATIONS & USER EXPERIENCE
+
+Use:
+
+- smooth page transitions
+- route animations
+- loading skeletons
+- animated cards
+- hover effects
+- cinematic scrolling
+- floating UI elements
+- parallax backgrounds
+- smooth dashboard interactions
+
+==================================================
+FINAL RESULT
+
+The final website should feel:
+
+- futuristic
+- luxurious
+- cinematic
+- fully dynamic
+- emotionally intelligent
+- production-level
+- interactive
+- responsive
+- visually stunning
+- technologically advanced
+
+Every feature, API, button, dashboard, route, and AI system must work like a real commercial travel SaaS platform — not a static prototype or design-only project.
