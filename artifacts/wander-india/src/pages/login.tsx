@@ -41,31 +41,40 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Left panel — decorative */}
+      {/* Left panel — decorative image */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1477587458883-47145ed4e85c?w=1200&q=80"
-          alt="Rajasthan palace"
-          className="absolute inset-0 w-full h-full object-cover"
+        {/* Background image via CSS (more reliable than <img>) */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1477587458883-47145ed4e85c?auto=format&fit=crop&w=1200&q=80)",
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/40 to-transparent" />
-        <div className="relative z-10 flex flex-col justify-between p-12 h-full">
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-black/30" />
+
+        <div className="relative z-10 flex flex-col justify-between p-12 h-full w-full">
           <Link href="/">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
                 <MapPin className="w-5 h-5 text-black" />
               </div>
               <span className="font-bold text-xl text-white">WanderIndia</span>
             </div>
           </Link>
+
           <div>
-            <h2 className="text-4xl font-black text-white mb-4">Every journey begins with a single step.</h2>
-            <p className="text-white/70 text-lg">Login to access your personalized AI travel planner and discover the magic of Incredible India.</p>
-            <div className="mt-8 flex gap-6">
+            <h2 className="text-4xl font-black text-white mb-4 leading-tight">
+              Every journey begins<br />with a single step.
+            </h2>
+            <p className="text-white/70 text-lg leading-relaxed">
+              Login to access your personalized AI travel planner and discover the magic of Incredible India.
+            </p>
+            <div className="mt-8 flex gap-8">
               {[["500+", "Destinations"], ["50K+", "Travelers"], ["98%", "Satisfaction"]].map(([num, label]) => (
                 <div key={label}>
                   <div className="text-2xl font-black text-amber-400">{num}</div>
-                  <div className="text-white/60 text-sm">{label}</div>
+                  <div className="text-white/60 text-sm mt-0.5">{label}</div>
                 </div>
               ))}
             </div>
@@ -94,7 +103,6 @@ export default function LoginPage() {
           <h1 className="text-3xl font-black text-white mb-2">Welcome back</h1>
           <p className="text-muted-foreground mb-8">Sign in to continue your adventure</p>
 
-          {/* Error */}
           {error && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -118,6 +126,7 @@ export default function LoginPage() {
                       <Input
                         {...field}
                         type="email"
+                        autoComplete="email"
                         placeholder="your@email.com"
                         className="h-12 bg-white/5 border-white/10 text-white placeholder:text-muted-foreground rounded-xl"
                         data-testid="input-email"
@@ -139,6 +148,7 @@ export default function LoginPage() {
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
+                          autoComplete="current-password"
                           placeholder="••••••••"
                           className="h-12 bg-white/5 border-white/10 text-white placeholder:text-muted-foreground rounded-xl pr-12"
                           data-testid="input-password"

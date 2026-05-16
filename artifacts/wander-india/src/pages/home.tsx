@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "wouter";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,31 @@ import { Input } from "@/components/ui/input";
 import {
   Search, Brain, Map, Sun, Plane, DollarSign, Package,
   MessageSquare, Gem, ArrowRight, Zap,
-  Wind, Mountain, Waves, Heart, Music, Users, Smile
+  Wind, Mountain, Heart, Music, Users, Smile, ChevronLeft, ChevronRight
 } from "lucide-react";
+
+const BG_SLIDES = [
+  {
+    url: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1920&q=80",
+    label: "Goa Beaches",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1477587458883-47145ed4e85c?auto=format&fit=crop&w=1920&q=80",
+    label: "Rajasthan Palaces",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1920&q=80",
+    label: "Kerala Backwaters",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1920&q=80",
+    label: "Ladakh Himalayas",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1920&q=80",
+    label: "Himachal Pradesh",
+  },
+];
 
 const MOODS = [
   { id: "relaxed", label: "Relaxed", icon: Sun, color: "from-blue-400 to-cyan-400" },
@@ -30,28 +53,38 @@ const QUICK_LINKS = [
   { href: "/budget", icon: DollarSign, label: "Budget Tracker", color: "from-orange-500/20 to-orange-500/5", border: "border-orange-500/20", text: "text-orange-400" },
 ];
 
-function Particle({ x, y, delay }: { x: string; y: string; delay: number }) {
-  return (
-    <motion.div
-      className="absolute w-1 h-1 rounded-full bg-amber-400/30"
-      style={{ left: x, top: y }}
-      animate={{ y: [0, -30, 0], opacity: [0.3, 0.8, 0.3] }}
-      transition={{ duration: 4 + delay, repeat: Infinity, delay }}
-    />
-  );
-}
-
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [, setLocation] = useLocation();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [direction, setDirection] = useState(1);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrentSlide(prev => (prev + 1) % BG_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const goTo = (idx: number) => {
+    setDirection(idx > currentSlide ? 1 : -1);
+    setCurrentSlide(idx);
+  };
+
+  const prev = () => {
+    setDirection(-1);
+    setCurrentSlide(prev => (prev - 1 + BG_SLIDES.length) % BG_SLIDES.length);
+  };
+
+  const next = () => {
+    setDirection(1);
+    setCurrentSlide(prev => (prev + 1) % BG_SLIDES.length);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (search.trim()) {
-      setLocation(`/destinations?search=${encodeURIComponent(search)}`);
-    } else {
-      setLocation("/destinations");
-    }
+    setLocation(search.trim() ? `/destinations?search=${encodeURIComponent(search)}` : "/destinations");
   };
 
   const handleMoodSelect = (moodId: string) => {
@@ -63,24 +96,85 @@ export default function HomePage() {
       <Navbar />
 
       <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4">
-        {/* Background */}
-        <div className="absolute inset-0 bg-grid" />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(245,158,11,0.12) 0%, transparent 70%)" }} />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
 
-        {[...Array(16)].map((_, i) => (
-          <Particle key={i} x={`${5 + i * 6}%`} y={`${10 + (i % 7) * 12}%`} delay={i * 0.3} />
-        ))}
+        {/* ── Sliding background images ── */}
+        <div className="absolute inset-0 overflow-hidden">
+          <AnimatePresence initial={false} custom={direction}>
+            <motion.div
+              key={currentSlide}
+              custom={direction}
+              variants={{
+                enter: (d: number) => ({ x: d > 0 ? "100%" : "-100%", opacity: 0 }),
+                center: { x: 0, opacity: 1 },
+                exit: (d: number) => ({ x: d > 0 ? "-100%" : "100%", opacity: 0 }),
+              }}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.9, ease: "easeInOut" }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${BG_SLIDES[currentSlide].url})` }}
+            />
+          </AnimatePresence>
 
-        <div className="relative z-10 w-full max-w-5xl mx-auto pt-28 pb-16 flex flex-col items-center text-center">
+          {/* Dark overlay — keeps text readable */}
+          <div className="absolute inset-0 bg-black/65" />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 50% at 50% 40%, rgba(245,158,11,0.10) 0%, transparent 70%)" }} />
+          <div className="absolute inset-0 bg-grid opacity-20" />
+        </div>
+
+        {/* Slide nav arrows */}
+        <button
+          onClick={prev}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-all"
+          aria-label="Previous"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={next}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-all"
+          aria-label="Next"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        {/* Slide dots */}
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          {BG_SLIDES.map((slide, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`h-1.5 rounded-full transition-all ${i === currentSlide ? "w-8 bg-amber-400" : "w-2 bg-white/30"}`}
+              aria-label={slide.label}
+            />
+          ))}
+        </div>
+
+        {/* Current location label */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.4 }}
+            className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 text-white/60 text-sm"
+          >
+            <Map className="w-3.5 h-3.5 text-amber-400" />
+            {BG_SLIDES[currentSlide].label}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* ── Main content ── */}
+        <div className="relative z-10 w-full max-w-5xl mx-auto pt-28 pb-20 flex flex-col items-center text-center">
 
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-sm font-medium mb-8 backdrop-blur-sm"
           >
             <Zap className="w-3.5 h-3.5" />
             AI-Powered Travel Planning for India
@@ -91,7 +185,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-black leading-tight mb-6"
+            className="text-5xl md:text-7xl font-black leading-tight mb-6 drop-shadow-2xl"
           >
             <span className="text-white">Discover</span>
             <br />
@@ -104,7 +198,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow"
           >
             Your emotionally intelligent travel companion. Plan your perfect Indian journey — from Ladakh peaks to Kerala backwaters.
           </motion.p>
@@ -118,12 +212,12 @@ export default function HomePage() {
             className="flex gap-3 w-full max-w-xl mx-auto mb-8"
           >
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
               <Input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search — Goa, Ladakh, Kerala..."
-                className="pl-11 h-14 bg-white/5 border-white/10 text-white placeholder:text-muted-foreground rounded-2xl text-base"
+                className="pl-11 h-14 bg-black/40 border-white/20 text-white placeholder:text-white/40 rounded-2xl text-base backdrop-blur-sm"
                 data-testid="input-search"
               />
             </div>
@@ -141,7 +235,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-4 mb-14"
+            className="flex flex-wrap justify-center gap-4 mb-12"
           >
             <Link href="/ai-planner">
               <Button
@@ -157,8 +251,7 @@ export default function HomePage() {
             <Link href="/destinations">
               <Button
                 size="lg"
-                variant="outline"
-                className="h-14 px-8 rounded-2xl border-white/20 text-white hover:bg-white/5 text-base"
+                className="h-14 px-8 rounded-2xl bg-black/40 backdrop-blur-sm border border-white/25 text-white hover:bg-black/60 text-base"
                 data-testid="btn-explore"
               >
                 <Map className="w-5 h-5 mr-2" />
@@ -172,18 +265,18 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.5 }}
-            className="w-full mb-14"
+            className="w-full mb-10"
           >
-            <p className="text-muted-foreground text-sm mb-5 uppercase tracking-wider font-semibold">Quick Access</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-              {QUICK_LINKS.map((item, i) => {
+            <p className="text-white/50 text-xs mb-4 uppercase tracking-widest font-semibold">Quick Access</p>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+              {QUICK_LINKS.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link key={item.href} href={item.href}>
                     <motion.div
-                      whileHover={{ scale: 1.05, y: -3 }}
+                      whileHover={{ scale: 1.06, y: -3 }}
                       whileTap={{ scale: 0.97 }}
-                      className={`glass-card rounded-2xl p-4 flex flex-col items-center gap-2 cursor-pointer border ${item.border} bg-gradient-to-b ${item.color} hover:brightness-110 transition-all`}
+                      className={`rounded-2xl p-4 flex flex-col items-center gap-2 cursor-pointer border ${item.border} bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-all`}
                     >
                       <Icon className={`w-6 h-6 ${item.text}`} />
                       <span className="text-white text-xs font-semibold text-center leading-tight">{item.label}</span>
@@ -199,11 +292,11 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
-            className="w-full mb-14"
+            className="w-full mb-10"
           >
-            <p className="text-muted-foreground text-sm mb-5 uppercase tracking-wider font-semibold">How are you feeling today?</p>
+            <p className="text-white/50 text-xs mb-4 uppercase tracking-widest font-semibold">How are you feeling today?</p>
             <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-              {MOODS.map((mood, i) => {
+              {MOODS.map((mood) => {
                 const Icon = mood.icon;
                 return (
                   <motion.button
@@ -212,7 +305,7 @@ export default function HomePage() {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleMoodSelect(mood.id)}
                     data-testid={`mood-${mood.id}`}
-                    className="glass-card rounded-2xl p-3 flex flex-col items-center gap-2 hover:border-white/20 transition-all cursor-pointer group"
+                    className="rounded-2xl p-3 flex flex-col items-center gap-2 bg-black/40 backdrop-blur-sm border border-white/10 hover:border-white/25 transition-all cursor-pointer group"
                   >
                     <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${mood.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                       <Icon className="w-5 h-5 text-white" />
@@ -233,15 +326,15 @@ export default function HomePage() {
           >
             {[["500+", "Destinations"], ["50K+", "Happy Travelers"], ["98%", "Satisfaction Rate"]].map(([num, label]) => (
               <div key={label} className="text-center">
-                <div className="text-2xl font-black text-gradient-amber">{num}</div>
-                <div className="text-xs text-muted-foreground mt-1">{label}</div>
+                <div className="text-2xl font-black text-gradient-amber drop-shadow">{num}</div>
+                <div className="text-xs text-white/50 mt-1">{label}</div>
               </div>
             ))}
           </motion.div>
         </div>
 
         {/* Footer strip */}
-        <div className="relative z-10 w-full border-t border-white/5 py-6 px-4">
+        <div className="relative z-10 w-full border-t border-white/10 py-6 px-4 backdrop-blur-sm bg-black/30">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
@@ -259,11 +352,11 @@ export default function HomePage() {
                 { href: "/emergency", label: "Emergency" },
               ].map(link => (
                 <Link key={link.href} href={link.href}>
-                  <span className="text-muted-foreground hover:text-white text-sm transition-colors">{link.label}</span>
+                  <span className="text-white/50 hover:text-white text-sm transition-colors">{link.label}</span>
                 </Link>
               ))}
             </div>
-            <p className="text-muted-foreground text-xs">© 2025 WanderIndia. Explore Incredible India.</p>
+            <p className="text-white/40 text-xs">© 2025 WanderIndia. Explore Incredible India.</p>
           </div>
         </div>
       </div>
