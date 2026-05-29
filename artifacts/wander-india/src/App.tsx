@@ -27,6 +27,7 @@ import EmergencyPage from "@/pages/emergency";
 import FeaturesPage from "@/pages/features";
 import ReelsPage from "@/pages/reels";
 import HotelsPage from "@/pages/hotels";
+import RestaurantsPage from "@/pages/restaurants";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,6 +71,7 @@ function Router() {
       <Route path="/features" component={FeaturesPage} />
       <Route path="/reels" component={ReelsPage} />
       <Route path="/hotels" component={HotelsPage} />
+      <Route path="/restaurants" component={RestaurantsPage} />
       <Route component={NotFound} />
     </Switch>
   );
