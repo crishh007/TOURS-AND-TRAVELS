@@ -1,0 +1,388 @@
+Build a fully dynamic, production-ready AI-powered Smart Travel & Tourism web application with futuristic premium UI/UX, cinematic visuals, modern animations, real backend functionality, immersive user experience, and intelligent travel discovery systems.
+
+The platform should behave like a real-world commercial SaaS travel ecosystem similar to Airbnb, Booking.com, MakeMyTrip, Instagram Reels, and TripAdvisor combined.
+
+The website must NOT be static or demo-based. Every page, component, API, booking system, AI feature, dashboard, animation, form, and user interaction must work dynamically.
+
+---
+
+🌍 MAIN PLATFORM FEATURES
+
+Create a complete travel ecosystem including:
+
+* AI Smart Travel Planner
+* Destination Discovery System
+* Short Video Reels Feed
+* Hotel & Stay Booking
+* Restaurant Discovery
+* Travel Offers & Discounts
+* Nearby Hotels & Restaurants Integration
+* Interactive Maps
+* Seller/Partner Dashboard
+* Customer Reviews & Ratings
+* AI Recommendations Engine
+* Saved Trips & Wishlist
+* Dynamic Search & Filters
+* Responsive Mobile-First UI
+
+---
+
+🎨 UI/UX DESIGN REQUIREMENTS
+
+Design Style:
+
+* Futuristic Premium Travel UI
+* Cinematic Visual Experience
+* Glassmorphism + Neumorphism
+* Smooth modern animations
+* Dynamic gradients
+* Elegant typography
+* Premium hover interactions
+* Card-based layouts
+* Dark + Light mode
+* Responsive across all devices
+
+Add:
+
+* Smooth page transitions
+* Animated loading screens
+* Scroll-trigger animations
+* Motion effects
+* Floating UI elements
+* Interactive buttons
+* Cinematic backgrounds
+* Dynamic image/video carousels
+
+Use:
+
+* Framer Motion
+* Tailwind CSS
+* React Icons
+* GSAP animations
+* SwiperJS sliders
+* Lottie animations
+
+---
+
+🏠 HOMEPAGE FEATURES
+
+Homepage should include:
+
+* Fullscreen cinematic hero section
+* AI travel search bar
+* Dynamic travel video background
+* Featured destinations slider
+* Trending travel reels
+* Popular hotels
+* Nearby restaurants
+* Travel categories
+* Seasonal offers section
+* Testimonials carousel
+* Animated statistics cards
+* Newsletter subscription
+* Interactive footer
+
+Dynamic Stats Examples:
+
+* 50+ Destinations
+* 10K+ Happy Travelers
+* 500+ Hotels
+* 24/7 Support
+
+---
+
+🎥 TRAVEL REELS SYSTEM
+
+Create an Instagram/TikTok-style travel reels feed.
+
+Features:
+
+* Auto-playing vertical travel videos
+* Infinite scrolling feed
+* Like, Save, Share functionality
+* Destination tags
+* Travel atmosphere previews
+* Cinematic destination clips
+* Smooth transitions
+* Reel descriptions
+* Trending travel hashtags
+
+Saved Reels:
+
+* Save favorite travel videos
+* Persistent LocalStorage/database support
+* Personal wishlist collection
+
+UI Style:
+
+* Dark cinematic mode
+* Glassmorphism overlays
+* Floating action buttons
+* Smooth hover effects
+* Premium animations
+
+---
+
+🏨 STAYS & HOTEL BOOKING SYSTEM
+
+Build a fully dynamic hotel booking module.
+
+Features:
+
+* Smart hotel search
+* Filter by:
+
+- Budget
+- Ratings
+- Amenities
+- Location
+- Hotel type
+- Availability
+
+Hotel Categories:
+
+* Luxury
+* Resort
+* Heritage
+* Boutique
+* Budget
+
+Hotel Cards Must Include:
+
+* Hotel images carousel
+* Ratings
+* Price per night
+* Availability status
+* Amenities
+* Reviews
+* Discounts
+* Offer badges
+
+Booking System:
+
+* Room selection
+* Booking modal
+* Guest count
+* Date picker
+* Payment integration
+* Booking confirmation
+
+---
+
+🍽️ RESTAURANT DISCOVERY SYSTEM
+
+Build a restaurant recommendation system integrated with destinations.
+
+Features:
+
+* Nearby restaurant suggestions
+* Cuisine categories
+* Restaurant ratings
+* Distance calculation
+* Opening hours
+* Pricing
+* Reservation system
+
+Restaurant Details:
+
+* Dynamic menu highlights
+* Featured dishes
+* Bestseller tags
+* Signature dishes
+* Food image galleries
+* Contact buttons
+* Reservation CTA
+
+Add:
+
+* Dining tips
+* Peak hour warnings
+* Best dishes recommendations
+* Nearby attraction integration
+
+---
+
+📍 NEARBY SERVICES INTEGRATION
+
+Connect destinations dynamically with:
+
+* Nearby hotels
+* Nearby restaurants
+* Tourist attractions
+* Transportation
+* Travel guides
+
+Purpose:
+
+Create a complete smart travel ecosystem that helps users plan everything in one place.
+
+---
+
+🎁 OFFERS & DEALS SYSTEM
+
+Implement a dynamic offers engine.
+
+Features:
+
+* Discount badges
+* Promotional banners
+* Seasonal deals
+* Flash offers
+* Dynamic pricing
+* Coupon system
+* Travel packages
+* Hotel discounts
+
+Offer Cards Include:
+
+* Original price
+* Discounted price
+* Offer percentage
+* Validity
+* CTA buttons
+
+---
+
+🧑‍💼 SELLER DASHBOARD
+
+Create a complete business management dashboard for:
+
+* Hotel owners
+* Restaurant owners
+* Tourism agencies
+
+Dashboard Features:
+
+* Manage listings
+* Upload images/videos
+* Add offers
+* Update pricing
+* Track bookings
+* View analytics
+* Manage availability
+* Update menus
+* Customer management
+
+Include:
+
+* Charts
+* Booking statistics
+* Revenue dashboard
+* Performance analytics
+* Notification system
+
+---
+
+🤖 AI FEATURES
+
+Implement advanced AI systems:
+
+* AI Travel Planner
+* Personalized destination recommendations
+* AI itinerary generator
+* Smart budget planner
+* Weather-based travel suggestions
+* AI chatbot assistant
+* Smart hotel recommendations
+* Travel vibe analysis
+
+AI Suggestions Based On:
+
+* User interests
+* Budget
+* Travel history
+* Preferred activities
+* Seasonal trends
+
+---
+
+🔐 AUTHENTICATION SYSTEM
+
+Add secure authentication:
+
+* JWT Authentication
+* Google Login
+* Email Login
+* Forgot Password
+* Role-based access
+* User profiles
+* Seller accounts
+* Booking history
+
+---
+
+🗺️ MAP & LOCATION FEATURES
+
+Integrate Google Maps/OpenStreetMap.
+
+Features:
+
+* Nearby places
+* Live directions
+* Distance calculations
+* Destination markers
+* Travel routes
+* Hotel locations
+* Restaurant locations
+
+---
+
+📱 RESPONSIVENESS
+
+The website must be:
+
+* Fully responsive
+* Mobile-first
+* Tablet optimized
+* Ultra smooth on desktop
+* Performance optimized
+
+---
+
+⚡ PERFORMANCE REQUIREMENTS
+
+Optimize for:
+
+* Fast loading speed
+* Lazy loading
+* Image optimization
+* SEO optimization
+* Dynamic imports
+* API caching
+* Smooth animations
+
+---
+
+🛠️ TECH STACK
+
+Frontend:
+
+* React JS / Next.js
+* Tailwind CSS
+* Framer Motion
+* Redux Toolkit
+* Axios
+
+Backend:
+
+* Node.js
+* Express.js
+* MongoDB
+* Firebase/Auth
+* Cloudinary
+
+APIs:
+
+* Google Maps API
+* Travel APIs
+* Hotel APIs
+* Weather API
+* AI APIs
+
+---
+
+🎯 FINAL OUTPUT EXPECTATION
+
+The final website should look like a premium billion-dollar AI travel startup with cinematic visuals, immersive travel discovery, smart booking systems, AI-powered recommendations, and social-media-style engagement.
+
+The platform should feel modern, luxurious, futuristic, highly interactive, and fully production-ready.
