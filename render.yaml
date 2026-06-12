@@ -1,0 +1,33 @@
+# Render Blueprint for WanderIndia split deployment
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: wander-india-api
+    runtime: node
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build
+    startCommand: node --enable-source-maps artifacts/api-server/dist/index.mjs
+    healthCheckPath: /api/healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://wander-india-1.onrender.com
+
+  - type: web
+    name: wander-india-frontend
+    runtime: static
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @workspace/wander-india run build
+    staticPublishPath: artifacts/wander-india/dist/public
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://wander-india.onrender.com

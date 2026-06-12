@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearch } from "wouter";
 import { motion } from "framer-motion";
 import { useListDestinations, getListDestinationsQueryKey } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
@@ -10,9 +11,18 @@ import { Search, Filter, MapPin } from "lucide-react";
 const CATEGORIES = ["All", "Beach", "Heritage", "Nature", "Adventure", "Spiritual", "Mountains", "Island", "Culture"];
 
 export default function DestinationsPage() {
-  const [search, setSearch] = useState("");
+  const searchString = useSearch();
+  const initialSearch = new URLSearchParams(searchString).get("search") ?? "";
+
+  const [search, setSearch] = useState(initialSearch);
   const [category, setCategory] = useState("All");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+
+  useEffect(() => {
+    const querySearch = new URLSearchParams(searchString).get("search") ?? "";
+    setSearch(querySearch);
+    setDebouncedSearch(querySearch);
+  }, [searchString]);
 
   const { data: destinations = [], isLoading } = useListDestinations(
     { search: debouncedSearch || undefined, category: category !== "All" ? category : undefined },

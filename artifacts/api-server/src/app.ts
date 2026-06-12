@@ -25,7 +25,27 @@ app.use(
     },
   }),
 );
-app.use(cors());
+const allowedOrigins = new Set(
+  [
+    "https://wander-india-1.onrender.com",
+    "http://localhost:5173",
+    "http://localhost:24932",
+    "http://localhost:8080",
+    process.env.FRONTEND_URL,
+  ].filter((origin): origin is string => Boolean(origin)),
+);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, true);
+    },
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

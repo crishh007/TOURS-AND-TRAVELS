@@ -3,8 +3,18 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-setBaseUrl(
-  import.meta.env.VITE_API_URL || "http://localhost:10000"
-);
+function resolveApiBaseUrl(): string {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+
+  if (import.meta.env.PROD) {
+    return "https://wander-india.onrender.com";
+  }
+
+  return "http://localhost:8080";
+}
+
+setBaseUrl(resolveApiBaseUrl());
 
 createRoot(document.getElementById("root")!).render(<App />);

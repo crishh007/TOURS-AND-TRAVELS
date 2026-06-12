@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearch, Link } from "wouter";
 import { useGetMoodRecommendations } from "@workspace/api-client-react";
+import { useToast } from "@/hooks/use-toast";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Navbar from "@/components/Navbar";
 import DestinationCard from "@/components/DestinationCard";
@@ -32,6 +33,7 @@ function MoodContent() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const getMoodRecs = useGetMoodRecommendations();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (preselectedMood) {
@@ -46,8 +48,12 @@ function MoodContent() {
     try {
       const res = await getMoodRecs.mutateAsync({ data: { mood } });
       setResult(res);
-    } catch {
-      // handle error
+    } catch (err: any) {
+      toast({
+        title: "Could not load mood recommendations",
+        description: err?.message ?? "Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
