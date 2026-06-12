@@ -49,6 +49,14 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (_req, res) => {
+  res.json({
+    name: "WanderIndia API",
+    status: "ok",
+    docs: "All routes are under /api — try /api/healthz or /api/destinations",
+  });
+});
+
 app.use("/api", router);
 
 export default app;

@@ -30,4 +30,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: https://wander-india.onrender.com
+        value: https://wander-india-api.onrender.com

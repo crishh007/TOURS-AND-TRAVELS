@@ -9,7 +9,7 @@ function resolveApiBaseUrl(): string {
   }
 
   if (import.meta.env.PROD) {
-    return "https://wander-india.onrender.com";
+    return "https://wander-india-api.onrender.com";
   }
 
   return "http://localhost:8080";
