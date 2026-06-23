@@ -4,9 +4,19 @@ import Navbar from "@/components/Navbar";
 import DestinationCard from "@/components/DestinationCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Gem } from "lucide-react";
+import { MOCK_DESTINATIONS } from "../data/destinations";
 
 export default function HiddenGemsPage() {
-  const { data: gems = [], isLoading } = useGetHiddenGems({ query: { queryKey: getGetHiddenGemsQueryKey() } });
+  const { data: apiGems, isLoading } = useGetHiddenGems({
+    query: {
+      queryKey: getGetHiddenGemsQueryKey(),
+      retry: false
+    }
+  });
+
+  const gems = Array.isArray(apiGems)
+    ? apiGems
+    : MOCK_DESTINATIONS.filter(d => d.isHiddenGem);
 
   return (
     <div className="min-h-screen bg-background">

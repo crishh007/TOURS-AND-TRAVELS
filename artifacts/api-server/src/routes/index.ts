@@ -6,6 +6,7 @@ import tripsRouter from "./trips";
 import aiRouter from "./ai";
 import weatherRouter from "./weather";
 import dashboardRouter from "./dashboard";
+import bookingsRouter from "./bookings";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(tripsRouter);
 router.use(aiRouter);
 router.use(weatherRouter);
 router.use(dashboardRouter);
+router.use(bookingsRouter);
 
 export default router;

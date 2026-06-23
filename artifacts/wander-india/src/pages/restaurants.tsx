@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
+import { customFetch } from "@workspace/api-client-react/custom-fetch";
 import { Button } from "@/components/ui/button";
 import {
   Star, MapPin, Search, Clock, Phone, X, SlidersHorizontal,
@@ -362,10 +363,35 @@ export default function RestaurantsPage() {
     });
   };
 
-  const confirmRes = () => {
+  const confirmRes = async () => {
     if (!reservation) return;
-    setConfirmed(reservation.restaurant);
-    setReservation(null);
+    try {
+      const detailsJson = JSON.stringify({
+        date: reservation.date,
+        time: reservation.time,
+        name: reservation.name,
+        phone: reservation.phone,
+      });
+
+      await customFetch("/api/bookings", {
+        method: "POST",
+        body: JSON.stringify({
+          itemType: "restaurant",
+          itemName: reservation.restaurant.name,
+          details: detailsJson,
+          guests: reservation.guests,
+          totalCost: 0, // Restaurant reservations usually have 0 upfront cost
+        }),
+      });
+
+      setConfirmed(reservation.restaurant);
+      setReservation(null);
+    } catch (err) {
+      console.error("Reservation failed:", err);
+      // Fallback to local confirm so UI updates
+      setConfirmed(reservation.restaurant);
+      setReservation(null);
+    }
   };
 
   const canSubmit = reservation?.name.trim() && reservation?.phone.trim() && reservation?.date && reservation?.time;

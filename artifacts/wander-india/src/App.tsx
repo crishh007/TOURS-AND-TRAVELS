@@ -14,6 +14,7 @@ import DestinationsPage from "@/pages/destinations";
 import DestinationDetailPage from "@/pages/destination-detail";
 import AIPlannerPage from "@/pages/ai-planner";
 import MoodPlannerPage from "@/pages/mood-planner";
+import MapPlannerPage from "@/pages/map-planner";
 import TripsPage from "@/pages/trips";
 import TripDetailPage from "@/pages/trip-detail";
 import BudgetPage from "@/pages/budget";
@@ -54,6 +55,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/home" component={HomePage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/dashboard" component={DashboardPage} />
@@ -61,6 +63,7 @@ function Router() {
       <Route path="/destinations/:id" component={DestinationDetailPage} />
       <Route path="/ai-planner" component={AIPlannerPage} />
       <Route path="/mood-planner" component={MoodPlannerPage} />
+      <Route path="/map-planner" component={MapPlannerPage} />
       <Route path="/trips" component={TripsPage} />
       <Route path="/trips/:id" component={TripDetailPage} />
       <Route path="/budget" component={BudgetPage} />

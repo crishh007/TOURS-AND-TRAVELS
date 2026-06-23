@@ -4,10 +4,12 @@
   "packageManager": "pnpm@10.0.0",
   "license": "MIT",
   "scripts": {
+    "dev": "pnpm run typecheck && pnpm --filter @workspace/api-server --filter @workspace/wander-india run dev",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "db:setup": "node scripts/setup-db.mjs"
+    "db:setup": "node scripts/setup-db.mjs",
+    "db:studio": "node --env-file=.env node_modules/drizzle-kit/bin.cjs studio --config lib/db/drizzle.config.ts"
   },
   "private": true,
   "devDependencies": {

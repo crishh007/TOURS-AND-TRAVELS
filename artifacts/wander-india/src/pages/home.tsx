@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "wouter";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -332,35 +333,9 @@ export default function HomePage() {
             ))}
           </motion.div>
         </div>
-
-        {/* Footer strip */}
-        <div className="relative z-10 w-full border-t border-white/10 py-6 px-4 backdrop-blur-sm bg-black/30">
-          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                <Plane className="w-3.5 h-3.5 text-black" />
-              </div>
-              <span className="font-bold">
-                <span className="text-gradient-amber">Wander</span>
-                <span className="text-white">India</span>
-              </span>
-            </div>
-            <div className="flex gap-6">
-              {[
-                { href: "/features", label: "Features" },
-                { href: "/about", label: "About" },
-                { href: "/contact", label: "Contact" },
-                { href: "/emergency", label: "Emergency" },
-              ].map(link => (
-                <Link key={link.href} href={link.href}>
-                  <span className="text-white/50 hover:text-white text-sm transition-colors">{link.label}</span>
-                </Link>
-              ))}
-            </div>
-            <p className="text-white/40 text-xs">© 2025 WanderIndia. Explore Incredible India.</p>
-          </div>
-        </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

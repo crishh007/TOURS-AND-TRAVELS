@@ -53,7 +53,7 @@ function ProfileContent() {
     }
   };
 
-  const initials = currentUser?.name?.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) || "WI";
+  const initials = currentUser?.name?.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) || "WI";
   const joinDate = currentUser?.createdAt ? new Date(currentUser.createdAt).toLocaleDateString("en-IN", { month: "long", year: "numeric" }) : "";
 
   return (

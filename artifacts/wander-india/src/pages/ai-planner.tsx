@@ -26,6 +26,157 @@ type FormData = z.infer<typeof schema>;
 const MOODS = ["relaxed", "adventurous", "romantic", "energetic", "stressed", "family", "party", "solo"];
 const POPULAR = ["Goa", "Rajasthan", "Kerala", "Ladakh", "Himachal Pradesh", "Rishikesh", "Varanasi", "Andaman"];
 
+function generateItineraryLocal(destination: string, days: number, mood: string, budget: number) {
+  const getDayTitleLocal = (dest: string, d: number, total: number) => {
+    if (d === 1) return `Arrival & First Impressions of ${dest}`;
+    if (d === total) return `Final Day & Farewell to ${dest}`;
+    const titles = [
+      `Exploring ${dest}'s Heritage`,
+      `Cultural Immersion in ${dest}`,
+      `Adventure Day in ${dest}`,
+      `Local Life & Hidden Spots`,
+      `Spiritual & Cultural Journey`,
+      `Day Trip & Scenic Exploration`,
+    ];
+    return titles[(d - 2) % titles.length];
+  };
+
+  const generateDayActivitiesLocal = (dest: string, m: string, d: number) => {
+    const baseActivities = [
+      `Morning walk through ${dest}'s old quarter`,
+      `Visit the most iconic landmark of ${dest}`,
+      `Local street food tour at the central market`,
+      `Sunset viewpoint photography session`,
+      `Evening cultural performance or sound & light show`,
+    ];
+
+    const moodActivities: Record<string, string[]> = {
+      adventurous: [`Adventure sports activity near ${dest}`, "Offbeat trail exploration", "Local village interaction"],
+      romantic: [`Romantic dinner with view`, `Couples spa experience`, `Sunrise boat ride`],
+      relaxed: [`Leisurely breakfast at a heritage cafe`, `Afternoon nap in the garden`, `Evening lakeside stroll`],
+      energetic: [`Early morning cycling tour`, `Water sports session`, `High-energy local festival`],
+      family: [`Interactive museum visit`, `Wildlife sanctuary tour`, `Cooking class with local family`],
+      stressed: [`Sunrise meditation session`, `Relaxing spa treatment`, `Quiet walk in nature`],
+      party: [`Sunset beach lounge party`, `Night clubbing at top venue`, `Late-night street food crawl`],
+      solo: [`Solo sightseeing journey`, `Coffee shop journaling session`, `Hostel social evening`],
+    };
+
+    const extras = moodActivities[m] || moodActivities.relaxed;
+    return [...baseActivities.slice(0, 3 - Math.min(d - 1, 1)), ...extras.slice(0, 2 + Math.min(d - 1, 1))];
+  };
+
+  const generateMealsLocal = (d: number) => {
+    const meals = [
+      [`Morning chai with local breakfast`, `Traditional lunch thali`, `Dinner at rooftop restaurant with view`],
+      [`Healthy continental breakfast`, `Street food lunch sampler`, `Dinner with local traditional music`],
+      [`Fruit and fresh juice breakfast`, `Famous local specialty biryani`, `Premium dinner at fine dining spot`],
+      [`Hot pancakes or local dosa`, `Fresh seafood or curry lunch`, `Tandoori platter dinner`],
+    ];
+    return meals[(d - 1) % meals.length];
+  };
+
+  const getAccommodationLocal = (dest: string, b: number, m: string) => {
+    const budgetPerNight = b / 7;
+    if (budgetPerNight > 5000 || m === "romantic") return `Heritage palace hotel or boutique stay in ${dest}`;
+    if (budgetPerNight > 2000) return `Comfortable 3-star hotel near ${dest}'s main attractions`;
+    return `Clean guesthouse or hostel in the heart of ${dest}`;
+  };
+
+  const getDayTipLocal = (d: number) => {
+    const tips = [
+      "Carry cash as many small shops don't accept cards.",
+      "Dress modestly when visiting religious sites.",
+      "Bargain respectfully at local markets — it's part of the culture!",
+      "Try the local transport for an authentic experience.",
+      "Always have water and snacks when exploring remote areas.",
+    ];
+    return tips[(d - 1) % tips.length];
+  };
+
+  const itinerary = Array.from({ length: days }, (_, i) => {
+    const day = i + 1;
+    return {
+      day,
+      title: `Day ${day}: ${getDayTitleLocal(destination, day, days)}`,
+      activities: generateDayActivitiesLocal(destination, mood, day),
+      meals: generateMealsLocal(day),
+      accommodation: getAccommodationLocal(destination, budget, mood),
+      tips: getDayTipLocal(day),
+    };
+  });
+
+  return {
+    destination,
+    days,
+    itinerary,
+    tips: [
+      `Best time to visit ${destination} depends on the season — plan accordingly.`,
+      "Always carry a reusable water bottle and local currency.",
+      "Respect local customs and dress codes at religious sites.",
+      `Your estimated daily budget: ₹${Math.round(budget / days).toLocaleString("en-IN")}`,
+      "Book accommodations in advance during peak season.",
+    ],
+    estimatedCost: budget,
+  };
+}
+
+async function generateItineraryGemini(destination: string, days: number, mood: string, budget: number) {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+  
+  const prompt = `Generate a highly detailed day-by-day travel itinerary for ${destination} for ${days} days.
+The traveler mood is ${mood} and the total budget is ₹${budget}.
+You must output a valid JSON object matching this schema:
+{
+  "destination": "${destination}",
+  "days": ${days},
+  "itinerary": [
+    {
+      "day": 1,
+      "title": "Day 1 Title",
+      "activities": ["Activity 1", "Activity 2", "Activity 3"],
+      "meals": ["Breakfast recommendation", "Lunch recommendation", "Dinner recommendation"],
+      "accommodation": "Recommended budget-appropriate hotel or hostel",
+      "tips": "Day 1 local tips"
+    }
+  ],
+  "tips": [
+    "General travel tip 1",
+    "General travel tip 2",
+    "General travel tip 3"
+  ],
+  "estimatedCost": ${budget}
+}`;
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json"
+        }
+      })
+    }
+  );
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Gemini API error: ${response.status} ${errText}`);
+  }
+
+  const data = await response.json();
+  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!rawText) {
+    throw new Error("Empty response from Gemini");
+  }
+
+  return JSON.parse(rawText.trim());
+}
+
 export default function AIPlannerPage() {
   return <ProtectedRoute><PlannerContent /></ProtectedRoute>;
 }
@@ -41,6 +192,7 @@ function PlannerContent() {
   const createTripMutation = useCreateTrip();
   const [result, setResult] = useState<any>(null);
   const [expandedDay, setExpandedDay] = useState<number | null>(0);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -49,12 +201,41 @@ function PlannerContent() {
 
   const onSubmit = async (data: FormData) => {
     setResult(null);
+    setIsGenerating(true);
     try {
       const res = await generateMutation.mutateAsync({ data: { ...data, interests: [] } });
+      if (!res || typeof res !== "object" || !res.itinerary) {
+        throw new Error("Invalid server response format");
+      }
       setResult(res);
       setExpandedDay(0);
-    } catch {
-      toast({ title: "Failed to generate itinerary", variant: "destructive" });
+    } catch (err) {
+      console.warn("Backend itinerary generation failed, trying Gemini API fallback:", err);
+      try {
+        const res = await generateItineraryGemini(data.destination, data.days, data.mood, data.budget);
+        setResult(res);
+        setExpandedDay(0);
+        toast({
+          title: "Itinerary Generated (AI Fallback)",
+          description: `Successfully generated itinerary for ${data.destination} via Gemini!`,
+        });
+      } catch (geminiErr) {
+        console.warn("Gemini fallback failed, generating itinerary locally:", geminiErr);
+        try {
+          const res = generateItineraryLocal(data.destination, data.days, data.mood, data.budget);
+          setResult(res);
+          setExpandedDay(0);
+          toast({
+            title: "Itinerary Generated (Local Fallback)",
+            description: `Generated a rule-based travel plan for ${data.destination} locally.`,
+          });
+        } catch (localErr) {
+          console.error("Local fallback failed:", localErr);
+          toast({ title: "Failed to generate itinerary", variant: "destructive" });
+        }
+      }
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -195,11 +376,11 @@ function PlannerContent() {
 
               <Button
                 type="submit"
-                disabled={generateMutation.isPending}
+                disabled={isGenerating}
                 className="w-full h-14 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold rounded-xl border-0 hover:opacity-90 glow-amber text-base"
                 data-testid="btn-generate"
               >
-                {generateMutation.isPending ? (
+                {isGenerating ? (
                   <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" /> Generating Your Perfect Itinerary...</span>
                 ) : (
                   <span className="flex items-center gap-2"><Brain className="w-5 h-5" /> Generate AI Itinerary</span>

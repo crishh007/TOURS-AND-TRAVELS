@@ -20,6 +20,72 @@ const MOODS = [
   { id: "family", label: "Family", icon: Users, color: "from-green-400 to-teal-400", desc: "Memories with loved ones" },
 ];
 
+import { MOCK_DESTINATIONS } from "../data/destinations";
+
+const LOCAL_MOOD_DESTINATIONS: Record<string, string[]> = {
+  stressed: ["peaceful", "relaxed"],
+  relaxed: ["relaxed", "romantic"],
+  romantic: ["romantic"],
+  energetic: ["adventurous", "energetic"],
+  adventurous: ["adventurous"],
+  lonely: ["peaceful", "relaxed"],
+  party: ["energetic", "adventurous"],
+  family: ["family"],
+};
+
+const LOCAL_MOOD_ACTIVITIES: Record<string, string[]> = {
+  stressed: ["Sunrise yoga on beach", "Silent forest walks", "Meditation retreats", "Hot spring soaking", "Ayurvedic spa therapy"],
+  relaxed: ["Backwater houseboat stay", "Sunrise boat ride on Ganges", "Tea garden walks", "Waterfall picnics", "Village homestay"],
+  romantic: ["Candlelight dinner with sunset views", "Camel ride at Thar Desert", "Heritage palace stay", "Shikara ride on Dal Lake", "Private beach sunset"],
+  energetic: ["White water rafting in Rishikesh", "Paragliding in Bir Billing", "Trekking to Triund", "Bungee jumping", "Night cycling in Goa"],
+  adventurous: ["Himalayan base camp trek", "Dune bashing in Jaisalmer", "Rock climbing in Hampi", "Scuba diving in Andamans", "Snow leopard safari in Ladakh"],
+  lonely: ["Sunrise watch at Kanyakumari", "Solo trek in Spiti Valley", "Buddhist monastery retreat", "Writing at cafe in Mcleod Ganj", "Volunteer travel in Rajasthan"],
+  party: ["Beach parties in Goa", "Night bazaars in Jaipur", "Rooftop bars in Mumbai", "Electronic music festivals", "Cafes in Bengaluru"],
+  family: ["Ranthambore safari", "Kerala houseboat with family", "Theme parks in Chennai", "Manali snow activities", "Golden Temple langar experience"],
+};
+
+const LOCAL_MOOD_STYLES: Record<string, string> = {
+  stressed: "Slow travel — minimal itinerary, maximum peace",
+  relaxed: "Leisurely exploration at your own pace",
+  romantic: "Intimate, curated experiences for two",
+  energetic: "Action-packed days with adventure at every turn",
+  adventurous: "Off-the-beaten-path, raw and authentic India",
+  lonely: "Solo travel that feels like a journey within",
+  party: "Live the vibrant, electric nightlife of India",
+  family: "Safe, fun and memorable for every age group",
+};
+
+const LOCAL_PACKING_TIPS: Record<string, string[]> = {
+  stressed: ["Comfortable slip-on shoes", "Comfortable lounge wear", "Noise-cancelling headphones", "Journal & pen"],
+  relaxed: ["Sun hat & sunglasses", "Swimwear", "Light linen clothing", "A good book"],
+  romantic: ["Smart-casual dining wear", "Camera", "Scented travel candles", "Bluetooth speaker"],
+  energetic: ["Quick-dry t-shirts", "Sturdy sneakers", "Hydration pack", "Action camera"],
+  adventurous: ["Trekking boots", "Rain jacket", "First-aid kit", "Offline map app"],
+  lonely: ["Compact backpack", "Personal safety alarm", "Travel lock", "Travel diary"],
+  party: ["Fashionable evening clothes", "Hangover cure/hydration salts", "Compact cross-body bag", "Portable charger"],
+  family: ["Small board games/cards", "Child safety tags", "Wet wipes (plenty)", "Multi-device charger"],
+};
+
+function getMoodRecommendationsLocal(mood: string) {
+  const targetMoods = LOCAL_MOOD_DESTINATIONS[mood] || [mood];
+  let matched = MOCK_DESTINATIONS.filter(d => d.mood && targetMoods.includes(d.mood));
+  
+  if (matched.length < 4) {
+    const ids = new Set(matched.map(m => m.id));
+    const fill = MOCK_DESTINATIONS.filter(d => !ids.has(d.id));
+    matched = [...matched, ...fill];
+  }
+  
+  return {
+    mood,
+    destinations: matched.slice(0, 4),
+    activities: LOCAL_MOOD_ACTIVITIES[mood] || LOCAL_MOOD_ACTIVITIES.relaxed,
+    travelStyle: LOCAL_MOOD_STYLES[mood] || "Explore India at your own pace",
+    packingTips: LOCAL_PACKING_TIPS[mood] || ["Comfortable walking shoes", "Universal adapter"],
+    bestSeason: "October to March",
+  };
+}
+
 export default function MoodPlannerPage() {
   return <ProtectedRoute><MoodContent /></ProtectedRoute>;
 }
@@ -47,12 +113,17 @@ function MoodContent() {
     setResult(null);
     try {
       const res = await getMoodRecs.mutateAsync({ data: { mood } });
+      if (!res || typeof res !== "object" || !res.destinations) {
+        throw new Error("Invalid response format from server");
+      }
       setResult(res);
     } catch (err: any) {
+      console.warn("Backend mood recommendations failed, using local fallback", err);
+      const res = getMoodRecommendationsLocal(mood);
+      setResult(res);
       toast({
-        title: "Could not load mood recommendations",
-        description: err?.message ?? "Please try again.",
-        variant: "destructive",
+        title: "Mood travel (Local Fallback)",
+        description: "Loaded locally because the server is offline.",
       });
     } finally {
       setLoading(false);

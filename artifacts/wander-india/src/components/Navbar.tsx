@@ -7,12 +7,14 @@ import {
   MapPin, Menu, X, Compass, Brain, Sun, Plane, DollarSign,
   User, MessageSquare, Package, Gem, LogOut, LayoutDashboard,
   Video, Building2, Utensils, Zap, ChevronDown, Users,
-  Clock, HelpCircle
+  Clock, HelpCircle, Home
 } from "lucide-react";
 
 const PRIMARY_NAV = [
+  { href: "/home", label: "Home", icon: Home },
   { href: "/destinations", label: "Explore", icon: Compass },
   { href: "/ai-planner", label: "AI Planner", icon: Brain },
+  { href: "/map-planner", label: "Map Planner", icon: MapPin },
   { href: "/mood-planner", label: "Mood Travel", icon: Sun },
   { href: "/reels", label: "Reels", icon: Video },
   { href: "/hotels", label: "Hotels", icon: Building2 },

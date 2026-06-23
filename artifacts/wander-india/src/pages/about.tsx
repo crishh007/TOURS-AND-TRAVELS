@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Brain, MapPin, Heart, Zap, Users, Star } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="min-h-screen bg-background flex flex-col justify-between">
+      <div>
+        <Navbar />
       <div className="max-w-4xl mx-auto px-4 pt-32 pb-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-6 glow-amber">
@@ -67,6 +69,8 @@ export default function AboutPage() {
           </Link>
         </motion.div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }
